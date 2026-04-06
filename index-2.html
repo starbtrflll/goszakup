@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Invataksi Investigation — Almaty 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Geologica:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink: #1a1208;
+    --paper: #f7f3ec;
+    --cream: #ede8df;
+    --accent: #b5340a;
+    --accent2: #1a5c3a;
+    --gold: #c8922a;
+    --muted: #6b5e4e;
+    --rule: #c9bfaf;
+    --serif: 'Playfair Display', Georgia, serif;
+    --sans: 'Geologica', sans-serif;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-weight: 300;
+    line-height: 1.8;
+    font-size: 17px;
+    overflow-x: hidden;
+  }
+
+  .masthead {
+    background: var(--ink);
+    color: var(--paper);
+    text-align: center;
+    padding: 1.1rem 2rem;
+    letter-spacing: .18em;
+    font-size: 10.5px;
+    font-weight: 500;
+    text-transform: uppercase;
+    font-family: var(--sans);
+    border-bottom: 3px double var(--gold);
+  }
+  .masthead span { color: var(--gold); margin: 0 .8em; }
+
+  .hero {
+    position: relative;
+    background: var(--ink);
+    color: var(--paper);
+    padding: 5rem 2rem 4rem;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg, transparent, transparent 39px,
+      rgba(255,255,255,.03) 39px, rgba(255,255,255,.03) 40px
+    );
+    pointer-events: none;
+  }
+  .hero-inner { max-width: 760px; margin: 0 auto; position: relative; }
+
+  .hero-tag {
+    display: inline-block;
+    background: var(--accent);
+    color: #fff;
+    font-size: 10px;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    padding: .35em 1em;
+    font-family: var(--sans);
+    font-weight: 500;
+    margin-bottom: 1.8rem;
+  }
+
+  .hero h1 {
+    font-family: var(--serif);
+    font-size: clamp(2.2rem, 5.5vw, 4rem);
+    font-weight: 900;
+    line-height: 1.1;
+    margin-bottom: 1.4rem;
+    letter-spacing: -.01em;
+  }
+  .hero h1 em { font-style: italic; color: var(--gold); }
+
+  .hero-deck {
+    font-size: 1.1rem;
+    font-weight: 300;
+    color: rgba(247,243,236,.7);
+    max-width: 580px;
+    line-height: 1.65;
+    margin-bottom: 2rem;
+  }
+
+  .hero-meta {
+    display: flex;
+    gap: 2rem;
+    font-size: 11px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: rgba(247,243,236,.4);
+    font-weight: 500;
+    border-top: 1px solid rgba(255,255,255,.1);
+    padding-top: 1.2rem;
+    flex-wrap: wrap;
+  }
+  .hero-meta strong { color: var(--gold); }
+
+  .container { max-width: 760px; margin: 0 auto; padding: 0 2rem; }
+  .wide      { max-width: 940px; margin: 0 auto; padding: 0 2rem; }
+
+  .article { padding: 3.5rem 0 1rem; }
+
+  .article p {
+    margin-bottom: 1.35rem;
+    color: #2c2418;
+    font-size: 1rem;
+    font-weight: 300;
+  }
+
+  .article p:first-of-type::first-letter {
+    font-family: var(--serif);
+    font-size: 4.2rem;
+    font-weight: 900;
+    float: left;
+    line-height: .82;
+    margin: .06em .13em 0 0;
+    color: var(--accent);
+  }
+
+  .pull-quote {
+    border-left: 4px solid var(--accent);
+    margin: 2.2rem 0;
+    padding: 1.1rem 1.6rem;
+    background: var(--cream);
+  }
+  .pull-quote p {
+    font-family: var(--serif);
+    font-size: 1.25rem;
+    font-style: italic;
+    line-height: 1.5;
+    color: var(--ink);
+    margin: 0 !important;
+  }
+  .pull-quote p::first-letter { all: unset; }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 1px;
+    background: var(--rule);
+    border: 1px solid var(--rule);
+    margin: 2rem 0;
+  }
+  .stat-card {
+    background: var(--paper);
+    padding: 1.5rem 1.2rem;
+    text-align: center;
+    transition: background .2s;
+  }
+  .stat-card:hover { background: #fff; }
+  .stat-num {
+    font-family: var(--serif);
+    font-size: 1.9rem;
+    font-weight: 900;
+    color: var(--accent);
+    display: block;
+    line-height: 1;
+    margin-bottom: .4rem;
+  }
+  .stat-label {
+    font-size: 10.5px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 500;
+  }
+
+  .flags-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: .9rem;
+    margin: 1.8rem 0;
+  }
+  @media(max-width: 540px){ .flags-grid { grid-template-columns: 1fr; } }
+
+  .flag-item {
+    background: #fff;
+    border: 1px solid var(--rule);
+    border-top: 3px solid var(--accent);
+    padding: 1.1rem 1rem;
+    transition: box-shadow .2s;
+  }
+  .flag-item:hover { box-shadow: 4px 4px 0 var(--cream); }
+  .flag-title {
+    font-family: var(--serif);
+    font-size: .97rem;
+    font-weight: 700;
+    margin-bottom: .35rem;
+  }
+  .flag-desc { font-size: .85rem; color: var(--muted); line-height: 1.55; }
+
+  .chart-block {
+    background: #fff;
+    border: 1px solid var(--rule);
+    margin: 2.2rem 0;
+    padding: 1.8rem;
+  }
+  .chart-title {
+    font-family: var(--serif);
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: .3rem;
+    color: var(--ink);
+  }
+  .chart-subtitle { font-size: .82rem; color: var(--muted); margin-bottom: 1.4rem; font-weight: 300; }
+  .chart-legend { display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 1rem; font-size: .8rem; color: var(--muted); }
+  .legend-dot { width: 10px; height: 10px; border-radius: 2px; display: inline-block; margin-right: 4px; }
+
+  .bar-compare { margin: .5rem 0 1rem; }
+  .bar-row { display: flex; align-items: center; gap: 1rem; margin-bottom: .9rem; }
+  .bar-label { width: 150px; font-size: .82rem; color: var(--muted); flex-shrink: 0; text-align: right; line-height: 1.3; }
+  .bar-track { flex: 1; background: var(--cream); height: 34px; }
+  .bar-fill {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    padding-left: .7rem;
+    font-size: .8rem;
+    font-weight: 500;
+    color: #fff;
+    white-space: nowrap;
+    width: 0;
+    transition: width 1.3s cubic-bezier(.4,0,.2,1);
+  }
+  @media(max-width:560px){ .bar-label{ width: 90px; font-size:.75rem; } }
+
+  .conclusion {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 2.8rem 2.2rem;
+    margin: 2.5rem 0;
+    position: relative;
+    overflow: hidden;
+  }
+  .conclusion::before {
+    content: '"';
+    font-family: var(--serif);
+    font-size: 14rem;
+    position: absolute;
+    top: -2.5rem; left: .5rem;
+    color: rgba(255,255,255,.04);
+    line-height: 1;
+    pointer-events: none;
+  }
+  .conclusion p {
+    font-size: .97rem;
+    line-height: 1.8;
+    color: rgba(247,243,236,.8);
+    margin-bottom: .9rem;
+    position: relative;
+  }
+  .conclusion p:last-child { margin-bottom: 0; }
+  .conclusion strong { color: var(--gold); font-weight: 500; }
+
+  .ornament { text-align: center; color: var(--gold); font-size: 1rem; letter-spacing: .5em; margin: 2.5rem 0; opacity: .45; }
+
+  footer {
+    background: var(--ink);
+    color: rgba(247,243,236,.3);
+    text-align: center;
+    padding: 2rem;
+    font-size: .75rem;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    border-top: 3px double var(--gold);
+    margin-top: 3rem;
+  }
+
+  .fade-in { opacity: 0; transform: translateY(22px); transition: opacity .65s ease, transform .65s ease; }
+  .fade-in.visible { opacity: 1; transform: none; }
+</style>
+</head>
+<body>
+
+<div class="masthead">
+  Investigation<span>✦</span>Almaty<span>✦</span>Public Procurement<span>✦</span>2026
+</div>
+
+<section class="hero">
+  <div class="hero-inner">
+    <span class="hero-tag">Investigative journalism</span>
+    <h1>When public money goes to <em>private hands</em></h1>
+    <p class="hero-deck">How one Almaty NGO won contracts worth nearly 445 million tenge for transport services for disabled children, and why the numbers do not add up.</p>
+    <div class="hero-meta">
+      <span><strong>Subject:</strong> Social Project Organization Group</span>
+      <span><strong>BIN:</strong> 210540019755</span>
+      <span><strong>Year:</strong> 2026</span>
+    </div>
+  </div>
+</section>
+
+<main>
+<div class="container fade-in">
+  <div class="article">
+
+    <p>Every year, the government spends public money on services for people who need help. One of these services is called Invataksi. It provides free transport for children with disabilities in Almaty. The idea is simple and important: children who cannot travel on their own should be able to go to school, to a doctor, or to a rehabilitation center. But what happens when a lot of public money goes to a company that raises serious questions?</p>
+
+    <p>In 2026, a public organization called Social Project Organization Group won a government contract worth 243,423,000 tenge to provide Invataksi services in Almaty. The contract covers transport for children with visual impairments under the age of 18. The service rate is set at 3,700 tenge per vehicle hour, and the provider must deliver at least 65,790 vehicle hours.</p>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <span class="stat-num">445M ₸</span>
+        <span class="stat-label">Total contracts in 2026</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-num">184K ₸</span>
+        <span class="stat-label">Taxes paid in 2025</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-num">3 700 ₸</span>
+        <span class="stat-label">Rate per vehicle hour</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-num">3</span>
+        <span class="stat-label">Companies, one director</span>
+      </div>
+    </div>
+
+    <p>Just three months after the main contract was signed, a supplementary agreement added another 202,347,293 tenge, bringing the total for 2026 to almost 445 million tenge. This kind of contract splitting can be a way to avoid stricter competitive procedures that apply to larger deals.</p>
+
+    <div class="pull-quote">
+      <p>"When money for disabled children is spent without proper control, the people who need help the most are the ones who suffer."</p>
+    </div>
+
+    <p>The head of the organization, Karabayev Shyngys Turdaliyevich, also leads two other companies at the same time. This is a well-known warning sign in public procurement. It can mean that one person controls several organizations and uses them to win government contracts. According to tax records, the organization paid only 184,000 tenge in taxes in 2025. This is a very small amount for a company that received nearly 500 million tenge in government contracts.</p>
+
+    <p>The price per vehicle hour is another problem. The contract sets the rate at 3,700 tenge per hour. But the average market rate for taxi waiting time in Kazakhstan is around 2,000 tenge. That means the contract rate is almost twice the normal market price. This points to a possible overpricing of services paid by the government.</p>
+
+  </div>
+</div>
+
+<div class="wide fade-in">
+  <div class="chart-block">
+    <p class="chart-title">Invataksi contract values across Kazakhstan</p>
+    <p class="chart-subtitle">Contract amount in millions of tenge. Almaty cases are shown in red.</p>
+    <div style="position:relative;width:100%;height:300px;">
+      <canvas id="chart1"></canvas>
+    </div>
+    <div class="chart-legend">
+      <span><span class="legend-dot" style="background:#b5340a;"></span>Almaty (this case)</span>
+      <span><span class="legend-dot" style="background:#c9bfaf;"></span>Other regions</span>
+    </div>
+  </div>
+</div>
+
+<div class="container fade-in">
+  <div class="article" style="padding-top:1rem;">
+
+    <p>When you compare the Almaty contracts with similar services in other regions, the difference is very clear. In Uralsk, a similar contract cost 2 million tenge. In the Kyzylorda region it was around 14.7 million tenge. Even in Atyrau, the total was 195 million tenge. Almaty received 445 million tenge for one year, almost all of it going to a single organization.</p>
+
+    <p>These patterns together create a picture that is hard to ignore. A sudden and large price increase between 2025 and 2026, a rate that is much higher than the market average, a contract that was split into two parts, a director who runs multiple organizations, and taxes that are far too low for the size of the income. Each of these things alone might have an explanation. Together, they are serious warning signs.</p>
+
+    <div class="flags-grid">
+      <div class="flag-item">
+        <p class="flag-title">Sudden price jump</p>
+        <p class="flag-desc">From 101.6M to 243.4M tenge for the same service, the same client, just one year later.</p>
+      </div>
+      <div class="flag-item">
+        <p class="flag-title">Rate above market price</p>
+        <p class="flag-desc">3,700 tenge per hour vs. around 2,000 tenge on the open market. Nearly 85% higher.</p>
+      </div>
+      <div class="flag-item">
+        <p class="flag-title">Contract splitting</p>
+        <p class="flag-desc">A 202M tenge extra agreement appeared just 3 months after the main contract was signed.</p>
+      </div>
+      <div class="flag-item">
+        <p class="flag-title">Linked organizations</p>
+        <p class="flag-desc">One director runs three companies at the same time. A classic conflict of interest signal.</p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="wide fade-in">
+  <div class="chart-block">
+    <p class="chart-title">Contract rate vs. market price per vehicle hour</p>
+    <p class="chart-subtitle">The contract rate is 85% above the average market price for taxi services in Kazakhstan.</p>
+    <div class="bar-compare" id="barCompare">
+      <div class="bar-row">
+        <span class="bar-label">Contract rate</span>
+        <div class="bar-track">
+          <div class="bar-fill" id="bar1" style="background:#b5340a;">3,700 ₸/hr</div>
+        </div>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Market price</span>
+        <div class="bar-track">
+          <div class="bar-fill" id="bar2" style="background:#1a5c3a;">~2,000 ₸/hr</div>
+        </div>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Overpayment</span>
+        <div class="bar-track">
+          <div class="bar-fill" id="bar3" style="background:#c8922a;">+1,700 ₸ (+85%)</div>
+        </div>
+      </div>
+    </div>
+    <p style="font-size:.8rem;color:var(--muted);margin-top:.3rem;">* Market rate based on average taxi waiting time in Kazakhstan in 2024 (approx. $4.5/hr)</p>
+  </div>
+</div>
+
+<div class="container fade-in">
+  <div class="article" style="padding-top:1rem;">
+
+    <p>Public procurement is not just about paperwork. It is about how a society takes care of the people who need support. When contracts for disabled children are awarded without real competition, at prices far above market rates, and to organizations with unclear financial records, the system fails the most vulnerable people.</p>
+
+    <div class="conclusion">
+      <p>What can be done? Independent audits of social procurement contracts should be regular and public. Price benchmarking should be required before any rate is approved. Contract splitting should trigger automatic review by oversight bodies. And any director who runs multiple organizations at the same time should face additional checks before winning government contracts.</p>
+      <p><strong>Transparency in social procurement is not bureaucracy. It is protection for people who cannot protect themselves.</strong></p>
+    </div>
+
+  </div>
+</div>
+</main>
+
+<footer>
+  Based on public procurement data from Kazakhstan &nbsp;✦&nbsp; BIN 210540019755 &nbsp;✦&nbsp; 2026
+</footer>
+
+<script>
+new Chart(document.getElementById('chart1').getContext('2d'), {
+  type: 'bar',
+  data: {
+    labels: ['Almaty 2025','Almaty 2026\nmain contract','Almaty 2026\ntotal','Atyrau 2025','Kyzylorda\n2026','Uralsk 2025'],
+    datasets: [{
+      label: 'Contract value (M tenge)',
+      data: [101.7, 243.4, 445.8, 195, 14.7, 2],
+      backgroundColor: ['#b5340a','#b5340a','#b5340a','#c9bfaf','#c9bfaf','#c9bfaf'],
+      borderRadius: 0,
+      borderSkipped: false,
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: { callbacks: { label: ctx => ctx.parsed.y.toFixed(1) + ' M tenge' } }
+    },
+    scales: {
+      x: {
+        ticks: { autoSkip: false, maxRotation: 0, font: { size: 10.5, family: "'Geologica', sans-serif" }, color: '#6b5e4e' },
+        grid: { display: false },
+        border: { color: '#c9bfaf' }
+      },
+      y: {
+        beginAtZero: true,
+        ticks: { callback: v => v + 'M', font: { size: 11, family: "'Geologica', sans-serif" }, color: '#6b5e4e' },
+        grid: { color: 'rgba(201,191,175,.3)' },
+        border: { dash: [4,4], color: 'transparent' }
+      }
+    }
+  }
+});
+
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+      if (e.target.querySelector('#barCompare')) {
+        setTimeout(() => { document.getElementById('bar1').style.width = '84%'; }, 100);
+        setTimeout(() => { document.getElementById('bar2').style.width = '45%'; }, 300);
+        setTimeout(() => { document.getElementById('bar3').style.width = '39%'; }, 500);
+      }
+    }
+  });
+}, { threshold: 0.12 });
+
+document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
